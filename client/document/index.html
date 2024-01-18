@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Untitled Document</title>
+		<script
+			src="https://cdn.socket.io/4.7.4/socket.io.min.js"
+			integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4"
+			crossorigin="anonymous"
+		></script>
+		<link rel="stylesheet" href="../style.css" />
+	</head>
+	<body>
+		<nav class="nav">
+			<div class="inner">
+				<h1>Coldoc</h1>
+				<a href="/">Home</a>
+			</div>
+		</nav>
+		<main>
+			<input
+				type="text"
+				id="title_input"
+				class="input title_input"
+				aria-label="document title"
+			/>
+
+			<section class="user-block">
+				<div class="editors">
+					<span class="editors_label">Editors:</span>
+					<span id="editor_names"></span>
+				</div>
+
+				<div class="name-input-group">
+					<label for="name_input">Your Name</label>
+					<input type="text" id="name_input" class="input" />
+				</div>
+			</section>
+
+			<textarea id="textarea" class="textarea"></textarea>
+
+			<div class="status">
+				<div id="status_message"></div>
+				<div id="word_count"></div>
+			</div>
+		</main>
+
+		<script src="client.js"></script>
+	</body>
+</html>
