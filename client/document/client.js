@@ -20,6 +20,7 @@ function handle_socket(socket) {
 	handle_title_input(socket)
 	handle_status(socket)
 	handle_editor_names(socket)
+	handle_allow_typing(socket)
 }
 
 function get_doc_id() {
@@ -87,4 +88,10 @@ function get_word_count(text) {
 		.split(/\s+/)
 		.filter((word) => word !== "")
 	return words.length
+}
+
+function handle_allow_typing(socket) {
+	socket.on("allow_typing", (allow) => {
+		textarea.disabled = !allow
+	})
 }

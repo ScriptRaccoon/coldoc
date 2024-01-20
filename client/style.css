@@ -12,6 +12,7 @@
 	--bg-color: #fff;
 	--inverted-font-color: #fff;
 	--light-color: #ddd;
+	--disabled-textarea-color: #f5f5f5;
 	--dark-color: #666;
 	--width: 42rem;
 }
@@ -86,6 +87,12 @@ a:focus-visible {
 	padding: 1rem;
 	height: 20rem;
 	outline: none;
+}
+
+.textarea[disabled] {
+	cursor: not-allowed;
+	color: var(--dark-color);
+	background-color: var(--disabled-textarea-color);
 }
 
 .textarea:focus-visible {

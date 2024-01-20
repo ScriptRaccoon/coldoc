@@ -14,6 +14,7 @@ export function get_or_create(id) {
 		id,
 		editors: {},
 		typing_timeout: null,
+		current_editor: null,
 	}
 
 	documents[id] = doc
