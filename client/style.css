@@ -28,14 +28,7 @@ body {
 
 /* RESETS */
 
-button {
-	cursor: pointer;
-	font: inherit;
-	background: none;
-	border: none;
-	color: inherit;
-}
-
+button,
 input,
 textarea {
 	font: inherit;
@@ -44,14 +37,24 @@ textarea {
 	color: inherit;
 }
 
+button {
+	cursor: pointer;
+}
+
 a {
 	color: inherit;
+}
+
+/* LINKS */
+
+.link {
+	text-decoration: underline;
 	text-underline-offset: 0.2rem;
 }
 
-a:focus-visible {
+.link:focus-visible {
 	outline: 0.1rem solid currentColor;
-	outline-offset: 2px;
+	outline-offset: 0.1rem;
 }
 
 /* BUTTONS AND INPUTS */
@@ -64,40 +67,31 @@ a:focus-visible {
 	border-radius: 0.25rem;
 }
 
-.link-like-button {
-	text-decoration: underline;
-	text-underline-offset: 0.2rem;
-}
-
-.link-like-button:focus-visible {
-	outline: 0.1rem solid currentColor;
-	outline-offset: 2px;
-}
-
 .button:focus-visible {
 	outline: 2px solid var(--dark-color);
 	outline-offset: 2px;
 }
 
-.input {
+.input,
+.textarea {
 	border: 1px solid var(--light-color);
 	border-radius: 0.25rem;
-	padding: 0.2rem 0.4rem;
 	outline: none;
 }
 
-.input:focus-visible {
+:is(.input, .textarea):focus-visible {
 	border-color: var(--dark-color);
+}
+
+.input {
+	padding: 0.2rem 0.4rem;
 }
 
 .textarea {
 	width: 100%;
 	resize: vertical;
-	border: 1px solid var(--light-color);
-	border-radius: 0.25rem;
 	padding: 1rem;
 	height: 20rem;
-	outline: none;
 }
 
 .textarea[disabled] {
@@ -106,36 +100,47 @@ a:focus-visible {
 	background-color: var(--disabled-textarea-color);
 }
 
-.textarea:focus-visible {
-	border-color: var(--dark-color);
+/* INPUT GROUP */
+
+.input_group {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.input_group label {
+	font-weight: 500;
+}
+
+.input_group input {
+	width: 10rem;
 }
 
 /* MAIN */
 
 main {
 	max-width: var(--width);
-	margin: 0 auto;
-	padding: 1rem 0.5rem;
+	margin-inline: auto;
+	padding: 1rem 0.75rem;
 }
 
 /* HOME PAGE */
 
-.home-header {
+.home_header {
 	padding-block: 2rem 1rem;
+	text-align: center;
 }
 
-.home-header h1 {
-	text-align: center;
-	font-weight: 500;
+.home_header h1 {
+	font-weight: 600;
 	font-size: 3rem;
 }
 
-.home-header p {
-	text-align: center;
+.home_header p {
 	font-size: 1.25rem;
 }
 
-.form {
+.home_form {
 	display: flex;
 	justify-content: center;
 }
@@ -149,70 +154,48 @@ main {
 	color: var(--inverted-font-color);
 }
 
-.nav .inner {
+.nav_content {
 	padding: 0.5rem 1rem;
 	max-width: var(--width);
-	margin: 0 auto;
+	margin-inline: auto;
 	display: flex;
 	align-items: center;
+	gap: 1rem;
 }
 
 .nav h1 {
-	font-weight: 500;
+	font-weight: 600;
 	margin-right: auto;
 }
 
-.nav button {
-	margin-right: 1rem;
-}
-
-/* TITLE */
+/* TITLE INPUT */
 
 .title_input {
 	font-size: 2rem;
 	font-weight: 500;
-	margin-bottom: 1rem;
+	margin-block: 0.5rem 1rem;
 	width: 100%;
 }
 
-/* NAME INPUT */
+/* USER BLOCK */
 
-.name-input-group {
-	display: flex;
-	gap: 0.5rem;
-	align-items: center;
-	margin-bottom: 1rem;
-	margin-left: auto;
-	width: fit-content;
+.user_block {
+	display: grid;
+	gap: 1rem;
+	margin-bottom: 2rem;
 }
 
-.name-input-group label {
-	font-weight: 500;
-}
-
-.name-input-group input {
-	width: 10rem;
+@media (min-width: 38rem) {
+	.user_block {
+		grid-template-columns: 1fr auto;
+		align-items: start;
+	}
 }
 
 /* EDITORS */
 
 .editors_label {
 	font-weight: 500;
-}
-
-/* USER BLOCK */
-
-.user-block {
-	display: grid;
-	gap: 0.75rem;
-	margin-bottom: 1.5rem;
-}
-
-@media (min-width: 42rem) {
-	.user-block {
-		grid-template-columns: 1fr auto;
-		align-items: start;
-	}
 }
 
 /* STATUS */
