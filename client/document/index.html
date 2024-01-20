@@ -29,7 +29,7 @@
 				aria-label="document title"
 			/>
 
-			<section class="user-block">
+			<section class="user-block" aria-label="users">
 				<div class="editors">
 					<span class="editors_label">Editors:</span>
 					<span id="editor_names"></span>
@@ -41,12 +41,16 @@
 				</div>
 			</section>
 
-			<textarea id="textarea" class="textarea"></textarea>
+			<textarea
+				id="textarea"
+				class="textarea"
+				aria-label="content of the document"
+			></textarea>
 
-			<div class="status">
+			<aside class="status">
 				<div id="status_message"></div>
 				<div id="word_count"></div>
-			</div>
+			</aside>
 		</main>
 
 		<script src="client.js"></script>

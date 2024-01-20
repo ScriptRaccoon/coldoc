@@ -121,7 +121,7 @@ main {
 /* HOME PAGE */
 
 .home-header {
-	padding-block: 2rem;
+	padding-block: 2rem 1rem;
 }
 
 .home-header h1 {
