@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 const textarea = document.getElementById("textarea")
 const title_input = document.getElementById("title_input")
 const name_input = document.getElementById("name_input")
