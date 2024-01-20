@@ -4,6 +4,7 @@ const name_input = document.getElementById("name_input")
 const status_message = document.getElementById("status_message")
 const editor_names = document.getElementById("editor_names")
 const word_count_display = document.getElementById("word_count")
+const share_button = document.getElementById("share_button")
 
 init()
 
@@ -11,6 +12,7 @@ function init() {
 	const io = window.io
 	const socket = io()
 	handle_socket(socket)
+	share_button.addEventListener("click", copy_URL)
 }
 
 function handle_socket(socket) {
@@ -94,4 +96,12 @@ function handle_allow_typing(socket) {
 	socket.on("allow_typing", (allow) => {
 		textarea.disabled = !allow
 	})
+}
+
+function copy_URL() {
+	const url = window.location.href
+	navigator.clipboard.writeText(url)
+	const previous_text = share_button.innerText
+	share_button.innerText = "Copied!"
+	setTimeout(() => (share_button.innerText = previous_text), 1000)
 }
