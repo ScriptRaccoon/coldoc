@@ -16,4 +16,8 @@ router.get("/document/:id", (_, res) => {
 	res.sendFile(resolve_path("..", "pages", "document.html"))
 })
 
+router.use((_, res) => {
+	res.status(404).sendFile(resolve_path("..", "pages", "404.html"))
+})
+
 export default router
