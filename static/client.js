@@ -100,6 +100,6 @@ function copy_URL() {
 	const url = window.location.href
 	navigator.clipboard.writeText(url)
 	const previous_text = share_button.innerText
-	share_button.innerText = "Copied!"
+	share_button.innerText = "Copied URL!"
 	setTimeout(() => (share_button.innerText = previous_text), 1000)
 }
