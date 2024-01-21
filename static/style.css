@@ -147,6 +147,19 @@ main {
 	justify-content: center;
 }
 
+.recent_docs {
+	margin-top: 2rem;
+}
+
+.recent_docs h2 {
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
+.recent_docs ul {
+	margin-left: 1.5rem;
+}
+
 /* DOCUMENT PAGE */
 
 /* NAVIGATION */

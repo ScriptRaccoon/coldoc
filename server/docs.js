@@ -8,7 +8,7 @@ export function get_or_create(id) {
 	const existing_doc = documents_db[id]
 	if (existing_doc) return existing_doc
 	const doc = {
-		title: "Untitled document",
+		title: "Untitled Document",
 		text: "",
 		id,
 		editors: {},

@@ -16,6 +16,21 @@
 			<form action="/new" method="POST" class="home_form">
 				<button class="button">Generate new document</button>
 			</form>
+
+			<% if (recent_documents?.length > 0) { %>
+			<section class="recent_docs">
+				<h2>Recent documents</h2>
+				<ul>
+					<% for (const doc of recent_documents) { %>
+					<li>
+						<a href="<%= doc.url %>" class="link">
+							<%= doc.title %>
+						</a>
+					</li>
+					<% } %>
+				</ul>
+			</section>
+			<% } %>
 		</main>
 	</body>
 </html>
