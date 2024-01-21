@@ -85,6 +85,7 @@ function handle_status_update(socket) {
 function handle_allow_typing(socket) {
 	socket.on("allow_typing", (allowed) => {
 		textarea.disabled = !allowed
+		if (!textarea.disabled) textarea.focus()
 	})
 }
 
