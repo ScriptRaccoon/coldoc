@@ -4,7 +4,7 @@ import { generate_ID, resolve_path } from "./utils.js"
 const router = express.Router()
 
 router.get("/", (_, res) => {
-	res.sendFile(resolve_path("..", "pages", "index.html"))
+	res.render("home")
 })
 
 router.post("/new", (_, res) => {
@@ -12,12 +12,13 @@ router.post("/new", (_, res) => {
 	res.redirect(`/document/${doc_id}`)
 })
 
-router.get("/document/:id", (_, res) => {
-	res.sendFile(resolve_path("..", "pages", "document.html"))
+router.get("/document/:id", (req, res) => {
+	const doc_id = req.params.id
+	res.render("document", { doc_id })
 })
 
 router.use((_, res) => {
-	res.status(404).sendFile(resolve_path("..", "pages", "404.html"))
+	res.status(404).render("404")
 })
 
 export default router

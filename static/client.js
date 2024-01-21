@@ -25,14 +25,8 @@ function handle_socket(socket) {
 	handle_allow_typing(socket)
 }
 
-function get_doc_id() {
-	const parts = window.location.pathname.split("/")
-	return parts[parts.length - 1]
-}
-
 function join(socket) {
-	const doc_id = get_doc_id()
-	socket.emit("join", doc_id)
+	socket.emit("join", DOC_ID)
 }
 
 function sync_name(socket) {
