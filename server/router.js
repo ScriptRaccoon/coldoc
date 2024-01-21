@@ -4,7 +4,7 @@ import { generate_ID, resolve_path } from "./utils.js"
 const router = express.Router()
 
 router.get("/", (_, res) => {
-	res.sendFile(resolve_path("..", "client", "home", "index.html"))
+	res.sendFile(resolve_path("..", "pages", "index.html"))
 })
 
 router.post("/new", (_, res) => {
@@ -13,7 +13,7 @@ router.post("/new", (_, res) => {
 })
 
 router.get("/document/:id", (_, res) => {
-	res.sendFile(resolve_path("..", "client", "document", "index.html"))
+	res.sendFile(resolve_path("..", "pages", "document.html"))
 })
 
 export default router

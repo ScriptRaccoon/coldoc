@@ -5,7 +5,7 @@ export function handle_sockets(server) {
 	const io = new Server(server)
 
 	io.on("connection", (socket) => {
-		socket.on("doc_id", (doc_id) => handle_doc_id(socket, doc_id))
+		socket.on("join", (doc_id) => handle_join(socket, doc_id))
 		socket.on("text", (text) => handle_text(socket, text))
 		socket.on("title", (title) => handle_title(socket, title))
 		socket.on("name", (name) => handle_name(socket, name))
@@ -16,7 +16,7 @@ export function handle_sockets(server) {
 		io.to(doc.id).emit("editor_names", Object.values(doc.editors))
 	}
 
-	function handle_doc_id(socket, doc_id) {
+	function handle_join(socket, doc_id) {
 		const doc = get_or_create(doc_id)
 		socket.join(doc_id)
 		socket.data.doc_id = doc_id
