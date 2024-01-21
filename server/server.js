@@ -3,10 +3,12 @@ import express from "express"
 import router from "./router.js"
 import { handle_sockets } from "./sockets.js"
 import { resolve_path } from "./utils.js"
+import cookie_parser from "cookie-parser"
 
 const app = express()
 const PORT = process.env.PORT || 3000
 
+app.use(cookie_parser())
 app.use(express.static(resolve_path("..", "static")))
 app.set("view engine", "ejs")
 app.set("views", resolve_path("..", "pages"))

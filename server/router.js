@@ -1,7 +1,10 @@
 import express from "express"
-import { generate_ID, resolve_path } from "./utils.js"
+import { generate_ID } from "./utils.js"
+import { set_user } from "./middlewares.js"
 
 const router = express.Router()
+
+router.use(set_user)
 
 router.get("/", (_, res) => {
 	res.render("home")
