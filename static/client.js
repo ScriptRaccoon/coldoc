@@ -94,7 +94,8 @@ function get_word_count(text) {
 function copy_URL() {
 	const url = window.location.href
 	navigator.clipboard.writeText(url)
-	const previous_text = share_button.innerText
-	share_button.innerText = "Copied URL!"
-	setTimeout(() => (share_button.innerText = previous_text), 1000)
+	share_button.classList.add("copied")
+	setTimeout(() => {
+		share_button.classList.remove("copied")
+	}, 1000)
 }

@@ -118,6 +118,12 @@ a {
 	width: 10rem;
 }
 
+/* ICONS */
+
+.icon {
+	width: 1.125rem;
+}
+
 /* MAIN */
 
 main {
@@ -181,6 +187,19 @@ main {
 .nav h1 {
 	font-weight: 600;
 	margin-right: auto;
+}
+
+.nav button:focus-visible {
+	outline: 1px solid var(--inverted-font-color);
+	outline-offset: 2px;
+}
+
+#share_button span {
+	display: none;
+}
+
+#share_button.copied span {
+	display: inline;
 }
 
 /* TITLE INPUT */
