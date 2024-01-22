@@ -31,15 +31,18 @@ export function handle_sockets(server) {
 		const doc = get_doc(doc_id)
 		if (!doc) return
 
-		const current_editor = doc.current_editor
-		if (current_editor && current_editor !== socket.id) return
+		const previous_editor = doc.current_editor
+		if (previous_editor && previous_editor !== socket.id) return
+
 		doc.current_editor = socket.id
 
-		socket.to(doc_id).emit("allow_typing", false)
+		if (!previous_editor) {
+			socket.to(doc_id).emit("allow_typing", false)
+			io.to(doc_id).emit("status", `${socket.data.name} is typing...`)
+		}
 
 		doc.text = text
 		socket.to(doc_id).emit("text", text)
-		io.to(doc_id).emit("status", `${socket.data.name} is typing...`)
 
 		if (doc.typing_timeout) {
 			clearTimeout(doc.typing_timeout)
@@ -47,8 +50,8 @@ export function handle_sockets(server) {
 		}
 
 		doc.typing_timeout = setTimeout(() => {
+			socket.to(doc_id).emit("allow_typing", true)
 			io.to(doc_id).emit("status", "")
-			io.to(doc_id).emit("allow_typing", true)
 			doc.current_editor = null
 		}, 1000)
 	}
