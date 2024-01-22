@@ -38,7 +38,7 @@ export function handle_sockets(server) {
 		socket.to(doc_id).emit("allow_typing", false)
 
 		doc.text = text
-		io.to(doc_id).emit("text", text)
+		socket.to(doc_id).emit("text", text)
 		io.to(doc_id).emit("status", `${socket.data.name} is typing...`)
 
 		if (doc.typing_timeout) {
