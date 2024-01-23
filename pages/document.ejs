@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Untitled Document</title>
+		<title><%= title %></title>
 		<script
 			src="https://cdn.socket.io/4.7.4/socket.io.min.js"
 			integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4"
@@ -30,6 +30,7 @@
 				id="title_input"
 				class="input title_input"
 				aria-label="document title"
+				value="<%= title %>"
 			/>
 
 			<section class="user_block" aria-label="users">
@@ -48,7 +49,9 @@
 				id="textarea"
 				class="textarea"
 				aria-label="content of the document"
-			></textarea>
+			>
+<%= text %></textarea
+			>
 
 			<aside class="status_bar">
 				<div id="status_message"></div>

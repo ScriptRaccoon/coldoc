@@ -11,8 +11,11 @@ init()
 function init() {
 	const io = window.io
 	const socket = io()
-	handle_socket(socket)
+	socket.on("connect", () => {
+		handle_socket(socket)
+	})
 	share_button.addEventListener("click", copy_URL)
+	display_word_count(textarea.value)
 }
 
 function handle_socket(socket) {
@@ -45,17 +48,19 @@ function sync_name(socket) {
 function handle_text_input(socket) {
 	textarea.addEventListener("input", () => {
 		socket.emit("text", textarea.value)
+		display_word_count(textarea.value)
 	})
 
 	socket.on("text", (text) => {
 		textarea.value = text
-		word_count_display.innerText = `${get_word_count(text)} words`
+		display_word_count(text)
 	})
 }
 
 function handle_title_input(socket) {
 	title_input.addEventListener("input", () => {
 		socket.emit("title", title_input.value)
+		document.title = title_input.value
 	})
 
 	socket.on("title", (title) => {
@@ -98,4 +103,8 @@ function copy_URL() {
 	setTimeout(() => {
 		share_button.classList.remove("copied")
 	}, 1000)
+}
+
+function display_word_count(text) {
+	word_count_display.innerText = `${get_word_count(text)} words`
 }

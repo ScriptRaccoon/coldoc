@@ -1,9 +1,13 @@
 import express from "express"
+import cookie_parser from "cookie-parser"
+import dotenv from "dotenv"
 
 import router from "./router.js"
 import { handle_sockets } from "./sockets.js"
 import { resolve_path } from "./utils.js"
-import cookie_parser from "cookie-parser"
+import { connect_to_db } from "./mongodb.js"
+
+dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -20,3 +24,5 @@ const server = app.listen(PORT, () => {
 app.use(router)
 
 handle_sockets(server)
+
+connect_to_db()

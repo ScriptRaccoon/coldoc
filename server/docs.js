@@ -1,20 +1,41 @@
-const documents_db = {}
+import { doc_model } from "./model.js"
 
-export function get_doc(id) {
-	return documents_db[id]
+export async function get_doc(id) {
+	try {
+		const doc = await doc_model.findById(id)
+		if (!doc) {
+			console.error(`No document found with id: ${id}`)
+			return null
+		}
+		return doc
+	} catch (err) {
+		console.error(`Could not get document with id: ${id}`, err)
+		return null
+	}
 }
 
-export function get_or_create(id) {
-	const existing_doc = documents_db[id]
-	if (existing_doc) return existing_doc
-	const doc = {
-		title: "Untitled Document",
-		text: "",
-		id,
-		editors: {},
-		typing_timeout: null,
-		current_editor: null,
+export async function create_doc() {
+	const doc = new doc_model()
+	try {
+		return await doc.save()
+	} catch (err) {
+		console.error("Could not create document in db", err)
+		return null
 	}
-	documents_db[id] = doc
-	return doc
+}
+
+export async function update_doc(id, updates) {
+	try {
+		const doc = await doc_model.findByIdAndUpdate(id, updates, {
+			new: true,
+		})
+		if (!doc) {
+			console.error(`No document found with id: ${id}`)
+			return null
+		}
+		return doc
+	} catch (err) {
+		console.error(`Could not update document with id: ${id}`, err)
+		return null
+	}
 }

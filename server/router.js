@@ -1,26 +1,30 @@
 import express from "express"
-import { generate_ID, generate_recent_documents } from "./utils.js"
-import { set_recent_ids, set_user } from "./middlewares.js"
+import { set_user, update_recent_docs } from "./middlewares.js"
+import { create_doc, get_doc } from "./docs.js"
 
 const router = express.Router()
 
 router.use(set_user)
 
 router.get("/", (req, res) => {
-	const recent_documents = generate_recent_documents(
-		req.user?.recent_ids ?? []
-	)
-	res.render("home", { recent_documents })
+	const recent_docs = req.user?.recent_docs ?? []
+	res.render("home", { recent_docs })
 })
 
-router.post("/new", (_, res) => {
-	const doc_id = generate_ID()
+router.post("/new", async (_, res) => {
+	const doc = await create_doc()
+	if (!doc) return res.status(500).send("Could not create document")
+	const doc_id = doc._id.toString()
 	res.redirect(`/document/${doc_id}`)
 })
 
-router.get("/document/:id", set_recent_ids, (req, res) => {
+router.get("/document/:id", async (req, res) => {
 	const doc_id = req.params.id
-	res.render("document", { doc_id })
+	const doc = await get_doc(doc_id)
+	if (!doc) return res.status(404).render("404")
+	const { title, text } = doc
+	update_recent_docs(req, res, doc_id, title)
+	res.render("document", { doc_id, title, text })
 })
 
 router.use((_, res) => {
