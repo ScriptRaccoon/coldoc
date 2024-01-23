@@ -49,7 +49,10 @@ export function handle_sockets(server) {
 
 		if (!previous_editor) {
 			socket.to(doc_id).emit("allow_typing", false)
-			io.to(doc_id).emit("status", `${socket.data.name} is typing...`)
+			io.to(doc_id).emit(
+				"text_status",
+				`${socket.data.name} is typing...`
+			)
 		}
 
 		socket.to(doc_id).emit("text", text)
@@ -63,7 +66,7 @@ export function handle_sockets(server) {
 			socket.to(doc_id).emit("allow_typing", true)
 			doc_mem.current_editor = null
 			const update = await update_doc(doc_id, { text })
-			send_save_status(update.error, doc_mem)
+			send_text_save_status(update.error, doc_mem)
 		}, 1000)
 	}
 
@@ -81,7 +84,8 @@ export function handle_sockets(server) {
 		}
 
 		doc_mem.title_timeout = setTimeout(async () => {
-			await update_doc(doc_id, { title })
+			const update = await update_doc(doc_id, { title })
+			send_title_save_status(update.error, doc_mem)
 		}, 1000)
 	}
 
@@ -108,12 +112,20 @@ export function handle_sockets(server) {
 		io.to(doc_mem.id).emit("editor_names", Object.values(doc_mem.editors))
 	}
 
-	function send_save_status(error, doc_mem) {
+	function send_text_save_status(error, doc_mem) {
 		const save_status = error ? "Error saving..." : "Saved!"
-		io.to(doc_mem.id).emit("status", save_status)
+		io.to(doc_mem.id).emit("text_status", save_status)
 		setTimeout(() => {
 			if (doc_mem.current_editor) return
-			io.to(doc_mem.id).emit("status", "")
+			io.to(doc_mem.id).emit("text_status", "")
+		}, 1500)
+	}
+
+	function send_title_save_status(error, doc_mem) {
+		const save_status = error ? "Error saving..." : "Saved!"
+		io.to(doc_mem.id).emit("title_status", save_status)
+		setTimeout(() => {
+			io.to(doc_mem.id).emit("title_status", "")
 		}, 1500)
 	}
 }

@@ -1,12 +1,13 @@
 const textarea = document.getElementById("textarea")
 const title_input = document.getElementById("title_input")
 const name_input = document.getElementById("name_input")
-const status_message_display = document.getElementById("status_message")
 const editor_names_display = document.getElementById("editor_names")
 const word_count_display = document.getElementById("word_count")
 const share_button = document.getElementById("share_button")
 const delete_button = document.getElementById("delete_button")
 const main_element = document.querySelector("main")
+const text_status = document.getElementById("text_status")
+const title_status = document.getElementById("title_status")
 
 init()
 
@@ -30,7 +31,6 @@ function handle_socket(socket) {
 	sync_name(socket)
 	handle_text_input(socket)
 	handle_title_input(socket)
-	handle_status_update(socket)
 	handle_editor_names(socket)
 	handle_allow_typing(socket)
 	handle_delete(socket)
@@ -63,6 +63,10 @@ function handle_text_input(socket) {
 		textarea.value = text
 		display_word_count(text)
 	})
+
+	socket.on("text_status", (status) => {
+		text_status.innerHTML = status ? status : "&nbsp;"
+	})
 }
 
 function handle_title_input(socket) {
@@ -84,17 +88,15 @@ function handle_title_input(socket) {
 		previous_title = title
 		add_to_recent_docs()
 	})
+
+	socket.on("title_status", (status) => {
+		title_status.innerHTML = status ? status : "&nbsp;"
+	})
 }
 
 function handle_editor_names(socket) {
 	socket.on("editor_names", (names) => {
 		editor_names_display.innerText = names.join(", ")
-	})
-}
-
-function handle_status_update(socket) {
-	socket.on("status", (status) => {
-		status_message_display.innerText = status
 	})
 }
 
