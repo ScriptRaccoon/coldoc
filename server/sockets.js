@@ -59,9 +59,9 @@ export function handle_sockets(server) {
 
 		doc_mem.text_timeout = setTimeout(async () => {
 			socket.to(doc_id).emit("allow_typing", true)
-			io.to(doc_id).emit("status", "")
 			doc_mem.current_editor = null
-			await update_doc(doc_id, { text })
+			const update = await update_doc(doc_id, { text })
+			send_save_status(update.error, doc_mem)
 		}, 1000)
 	}
 
@@ -94,5 +94,14 @@ export function handle_sockets(server) {
 
 	function send_editor_names(doc_mem) {
 		io.to(doc_mem.id).emit("editor_names", Object.values(doc_mem.editors))
+	}
+
+	function send_save_status(error, doc_mem) {
+		const save_status = error ? "Error saving..." : "Saved!"
+		io.to(doc_mem.id).emit("status", save_status)
+		setTimeout(() => {
+			if (doc_mem.current_editor) return
+			io.to(doc_mem.id).emit("status", "")
+		}, 1500)
 	}
 }
