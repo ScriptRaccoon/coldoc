@@ -71,7 +71,6 @@ export function handle_sockets(server) {
 	}
 
 	function handle_title(socket, title) {
-		if (!title?.trim()) return
 		const doc_id = socket.data.doc_id
 		const doc_mem = get_doc_in_memory(doc_id)
 		if (!doc_mem) return

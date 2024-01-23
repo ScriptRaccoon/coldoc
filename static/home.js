@@ -16,12 +16,13 @@ function display_recent_docs() {
 	recent_docs_display.removeAttribute("hidden")
 	recent_docs_list.innerHTML = ""
 	recent_docs.forEach((doc) => {
-		if (typeof doc !== "object" || !doc.id || !doc.title) return
+		const is_ok = typeof doc === "object" && "id" in doc && "title" in doc
+		if (!is_ok) return
 		const item = document.createElement("li")
 		const link = document.createElement("a")
 		link.href = `/document/${doc.id}`
 		link.classList.add("link")
-		link.innerText = doc.title
+		link.innerText = doc.title || "Untitled"
 		item.appendChild(link)
 		recent_docs_list.appendChild(item)
 	})
