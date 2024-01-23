@@ -9,7 +9,9 @@ router.get("/", (_, res) => {
 
 router.post("/new", async (_, res) => {
 	const doc = await create_doc()
-	if (!doc) return res.status(500).send("Could not create document")
+	if (doc.error) {
+		return res.render("error", { status: doc.status, message: doc.error })
+	}
 	const doc_id = doc._id.toString()
 	res.redirect(`/document/${doc_id}`)
 })
@@ -17,7 +19,9 @@ router.post("/new", async (_, res) => {
 router.get("/document/:id", async (req, res) => {
 	const doc_id = req.params.id
 	const doc = await get_doc(doc_id)
-	if (!doc) return res.status(404).render("404")
+	if (doc.error) {
+		return res.render("error", { status: doc.status, message: doc.error })
+	}
 	const { title, text } = doc
 	res.render("document", { doc_id, title, text })
 })

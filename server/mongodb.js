@@ -5,6 +5,7 @@ export async function connect_to_db() {
 		await mongoose.connect(process.env.MONGODB_URI)
 		console.info("Connected to MongoDB")
 	} catch (err) {
-		console.error("Could not connect to MongoDB", err)
+		console.error("Could not connect to MongoDB")
+		console.error(err)
 	}
 }
