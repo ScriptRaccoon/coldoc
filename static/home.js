@@ -13,7 +13,7 @@ function display_recent_docs() {
 	const recent_docs_display = document.querySelector(".recent_docs")
 	const recent_docs_list = recent_docs_display.querySelector("ul")
 	if (!recent_docs_display || !recent_docs_list) return
-	recent_docs_display.classList.add("visible")
+	recent_docs_display.removeAttribute("hidden")
 	recent_docs_list.innerHTML = ""
 	recent_docs.forEach((doc) => {
 		if (typeof doc !== "object" || !doc.id || !doc.title) return
