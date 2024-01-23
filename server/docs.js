@@ -57,3 +57,16 @@ export async function delete_doc(id) {
 		return { error: "Could not delete document", status: 500 }
 	}
 }
+
+export async function purge_old_docs() {
+	const one_year_ago = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000)
+	try {
+		const result = await doc_model.deleteMany({
+			updatedAt: { $lt: one_year_ago },
+		})
+		console.info(`Deleted ${result.deletedCount} old documents`)
+	} catch (err) {
+		console.error("Could not purge old documents")
+		console.error(err)
+	}
+}

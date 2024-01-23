@@ -166,6 +166,11 @@ main {
 	margin-left: 1.5rem;
 }
 
+.notice {
+	margin-top: 2rem;
+	color: var(--dark-color);
+}
+
 /* DOCUMENT PAGE */
 
 /* NAVIGATION */
