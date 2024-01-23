@@ -42,3 +42,18 @@ export async function update_doc(id, updates) {
 		return { error: "Could not update document", status: 500 }
 	}
 }
+
+export async function delete_doc(id) {
+	try {
+		const doc = await doc_model.findByIdAndDelete(id)
+		if (!doc) {
+			console.error(`No document found with id: ${id}`)
+			return { error: "No document found with that id", status: 404 }
+		}
+		return doc
+	} catch (err) {
+		console.error(`Could not delete document with id: ${id}`)
+		console.error(err)
+		return { error: "Could not delete document", status: 500 }
+	}
+}

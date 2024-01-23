@@ -18,3 +18,7 @@ export function get_or_create_doc_in_memory(id) {
 
 	return doc_mem
 }
+
+export function delete_doc_in_memory(id) {
+	delete docs_memory[id]
+}

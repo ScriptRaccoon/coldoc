@@ -5,6 +5,8 @@ const status_message_display = document.getElementById("status_message")
 const editor_names_display = document.getElementById("editor_names")
 const word_count_display = document.getElementById("word_count")
 const share_button = document.getElementById("share_button")
+const delete_button = document.getElementById("delete_button")
+const main_element = document.querySelector("main")
 
 init()
 
@@ -16,7 +18,7 @@ function init() {
 	})
 	share_button.addEventListener("click", copy_URL)
 	display_word_count(textarea.value)
-	update_recent_docs(DOC_ID, document.title)
+	add_to_recent_docs(DOC_ID, document.title)
 }
 
 function handle_socket(socket) {
@@ -27,6 +29,7 @@ function handle_socket(socket) {
 	handle_status_update(socket)
 	handle_editor_names(socket)
 	handle_allow_typing(socket)
+	handle_delete(socket)
 }
 
 function join(socket) {
@@ -68,14 +71,14 @@ function handle_title_input(socket) {
 		socket.emit("title", title_input.value)
 		document.title = title_input.value
 		previous_title = title_input.value
-		update_recent_docs(DOC_ID, title_input.value)
+		add_to_recent_docs(DOC_ID, title_input.value)
 	})
 
 	socket.on("title", (title) => {
 		title_input.value = title
 		document.title = title
 		previous_title = title
-		update_recent_docs(DOC_ID, title)
+		add_to_recent_docs(DOC_ID, title)
 	})
 }
 
@@ -96,6 +99,15 @@ function handle_allow_typing(socket) {
 		textarea.disabled = !allowed
 		if (!textarea.disabled) textarea.focus()
 	})
+}
+
+function handle_delete(socket) {
+	delete_button.addEventListener("click", () => {
+		if (!confirm("Are you sure you want to delete this document?")) return
+		socket.emit("delete")
+	})
+
+	socket.on("deleted", display_deletion)
 }
 
 function get_word_count(text) {
@@ -119,7 +131,7 @@ function display_word_count(text) {
 	word_count_display.innerText = `${get_word_count(text)} words`
 }
 
-function update_recent_docs(id, title) {
+function add_to_recent_docs(id, title) {
 	try {
 		const recents = JSON.parse(localStorage.getItem("recent_docs") ?? "[]")
 		const others = recents.filter((doc) => doc?.id !== id)
@@ -128,4 +140,24 @@ function update_recent_docs(id, title) {
 	} catch (err) {
 		console.error(err)
 	}
+}
+
+function remove_from_recent_docs(id) {
+	try {
+		const recents = JSON.parse(localStorage.getItem("recent_docs") ?? "[]")
+		const others = recents.filter((doc) => doc?.id !== id)
+		localStorage.setItem("recent_docs", JSON.stringify(others))
+	} catch (err) {
+		console.error(err)
+	}
+}
+
+function display_deletion() {
+	remove_from_recent_docs(DOC_ID)
+	main_element.innerHTML =
+		"This document has been deleted. " +
+		"You will be redirected to the home page ..."
+	setTimeout(() => {
+		window.location.href = "/"
+	}, 4000)
 }

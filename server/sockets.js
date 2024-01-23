@@ -1,8 +1,9 @@
 import { Server } from "socket.io"
-import { update_doc } from "./docs.js"
+import { delete_doc, update_doc } from "./docs.js"
 import {
 	get_or_create_doc_in_memory,
 	get_doc_in_memory,
+	delete_doc_in_memory,
 } from "./docs_memory.js"
 
 export function handle_sockets(server) {
@@ -14,6 +15,7 @@ export function handle_sockets(server) {
 		socket.on("title", (title) => handle_title(socket, title))
 		socket.on("name", (name) => handle_name(socket, name))
 		socket.on("disconnect", () => handle_disconnection(socket))
+		socket.on("delete", () => handle_delete(socket))
 	})
 
 	function handle_join(socket, doc_id) {
@@ -90,6 +92,16 @@ export function handle_sockets(server) {
 		if (!doc_mem) return
 		delete doc_mem.editors[socket.id]
 		send_editor_names(doc_mem)
+	}
+
+	async function handle_delete(socket) {
+		const doc_id = socket.data.doc_id
+		const doc_mem = get_doc_in_memory(doc_id)
+		if (!doc_mem) return
+		delete_doc_in_memory(doc_id)
+		const result = await delete_doc(doc_id)
+		if (result.error) return
+		io.to(doc_id).emit("deleted")
 	}
 
 	function send_editor_names(doc_mem) {
