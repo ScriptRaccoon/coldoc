@@ -16,6 +16,7 @@ function init() {
 	})
 	share_button.addEventListener("click", copy_URL)
 	display_word_count(textarea.value)
+	update_recent_docs(DOC_ID, document.title)
 }
 
 function handle_socket(socket) {
@@ -107,4 +108,15 @@ function copy_URL() {
 
 function display_word_count(text) {
 	word_count_display.innerText = `${get_word_count(text)} words`
+}
+
+function update_recent_docs(id, title) {
+	try {
+		const recents = JSON.parse(localStorage.getItem("recent_docs") ?? "[]")
+		const others = recents.filter((doc) => doc?.id !== id)
+		const updated = [{ id, title }, ...others].slice(0, 10)
+		localStorage.setItem("recent_docs", JSON.stringify(updated))
+	} catch (err) {
+		console.error(err)
+	}
 }

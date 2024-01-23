@@ -17,20 +17,11 @@
 				<button class="button">Generate new document</button>
 			</form>
 
-			<% if (recent_docs?.length > 0) { %>
 			<section class="recent_docs">
 				<h2>Recent documents</h2>
-				<ul>
-					<% for (const doc of recent_docs) { %>
-					<li>
-						<a href="/document/<%= doc.id %>" class="link">
-							<%= doc.title %>
-						</a>
-					</li>
-					<% } %>
-				</ul>
+				<ul></ul>
 			</section>
-			<% } %>
 		</main>
+		<script src="/home.js"></script>
 	</body>
 </html>

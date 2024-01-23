@@ -154,7 +154,12 @@ main {
 }
 
 .recent_docs {
+	display: none;
 	margin-top: 2rem;
+}
+
+.recent_docs.visible {
+	display: block;
 }
 
 .recent_docs h2 {

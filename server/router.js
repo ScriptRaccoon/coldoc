@@ -1,14 +1,10 @@
 import express from "express"
-import { set_user, update_recent_docs } from "./middlewares.js"
 import { create_doc, get_doc } from "./docs.js"
 
 const router = express.Router()
 
-router.use(set_user)
-
-router.get("/", (req, res) => {
-	const recent_docs = req.user?.recent_docs ?? []
-	res.render("home", { recent_docs })
+router.get("/", (_, res) => {
+	res.render("home")
 })
 
 router.post("/new", async (_, res) => {
@@ -23,7 +19,6 @@ router.get("/document/:id", async (req, res) => {
 	const doc = await get_doc(doc_id)
 	if (!doc) return res.status(404).render("404")
 	const { title, text } = doc
-	update_recent_docs(req, res, doc_id, title)
 	res.render("document", { doc_id, title, text })
 })
 
