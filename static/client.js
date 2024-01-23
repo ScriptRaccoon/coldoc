@@ -10,6 +10,10 @@ const main_element = document.querySelector("main")
 
 init()
 
+function get_current_id() {
+	return document.body.getAttribute("data-doc-id")
+}
+
 function init() {
 	const io = window.io
 	const socket = io()
@@ -18,7 +22,7 @@ function init() {
 	})
 	share_button.addEventListener("click", copy_URL)
 	display_word_count(textarea.value)
-	add_to_recent_docs(DOC_ID, document.title)
+	add_to_recent_docs(document.title)
 }
 
 function handle_socket(socket) {
@@ -33,7 +37,7 @@ function handle_socket(socket) {
 }
 
 function join(socket) {
-	socket.emit("join", DOC_ID)
+	socket.emit("join", get_current_id())
 }
 
 function sync_name(socket) {
@@ -71,14 +75,14 @@ function handle_title_input(socket) {
 		socket.emit("title", title_input.value)
 		document.title = title_input.value
 		previous_title = title_input.value
-		add_to_recent_docs(DOC_ID, title_input.value)
+		add_to_recent_docs()
 	})
 
 	socket.on("title", (title) => {
 		title_input.value = title
 		document.title = title
 		previous_title = title
-		add_to_recent_docs(DOC_ID, title)
+		add_to_recent_docs()
 	})
 }
 
@@ -131,7 +135,9 @@ function display_word_count(text) {
 	word_count_display.innerText = `${get_word_count(text)} words`
 }
 
-function add_to_recent_docs(id, title) {
+function add_to_recent_docs() {
+	const id = get_current_id()
+	const title = document.title
 	try {
 		const recents = JSON.parse(localStorage.getItem("recent_docs") ?? "[]")
 		const others = recents.filter((doc) => doc?.id !== id)
@@ -142,7 +148,8 @@ function add_to_recent_docs(id, title) {
 	}
 }
 
-function remove_from_recent_docs(id) {
+function remove_from_recent_docs() {
+	const id = get_current_id()
 	try {
 		const recents = JSON.parse(localStorage.getItem("recent_docs") ?? "[]")
 		const others = recents.filter((doc) => doc?.id !== id)
@@ -153,7 +160,7 @@ function remove_from_recent_docs(id) {
 }
 
 function display_deletion() {
-	remove_from_recent_docs(DOC_ID)
+	remove_from_recent_docs()
 	main_element.innerHTML =
 		"This document has been deleted. " +
 		"You will be redirected to the home page ..."
