@@ -61,18 +61,21 @@ function handle_text_input(socket) {
 function handle_title_input(socket) {
 	let previous_title = document.title
 	title_input.addEventListener("input", () => {
-		if (!title_input.value) {
+		if (!title_input.value.trim()) {
 			title_input.value = previous_title
 			return
 		}
 		socket.emit("title", title_input.value)
 		document.title = title_input.value
 		previous_title = title_input.value
+		update_recent_docs(DOC_ID, title_input.value)
 	})
 
 	socket.on("title", (title) => {
 		title_input.value = title
 		document.title = title
+		previous_title = title
+		update_recent_docs(DOC_ID, title)
 	})
 }
 
