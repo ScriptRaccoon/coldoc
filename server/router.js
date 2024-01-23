@@ -27,7 +27,10 @@ router.get("/document/:id", async (req, res) => {
 })
 
 router.use((_, res) => {
-	res.status(404).render("404")
+	res.render("error", {
+		status: 404,
+		message: "This page could not be found",
+	})
 })
 
 export default router
