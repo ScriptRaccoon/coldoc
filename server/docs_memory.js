@@ -10,10 +10,6 @@ export function get_or_create_doc_in_memory(id) {
 	const doc_mem = {
 		id,
 		editors: {},
-		text_timeout: null,
-		title_timeout: null,
-		text_editor: null,
-		title_editor: null,
 	}
 	docs_memory[id] = doc_mem
 

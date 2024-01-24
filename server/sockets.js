@@ -11,8 +11,8 @@ export function handle_sockets(server) {
 
 	io.on("connection", (socket) => {
 		socket.on("join", (doc_id) => handle_join(socket, doc_id))
-		socket.on("text", (text) => handle_text(socket, text))
-		socket.on("title", (title) => handle_title(socket, title))
+		socket.on("text", (text) => handle_input(socket, "text", text))
+		socket.on("title", (title) => handle_input(socket, "title", title))
 		socket.on("name", (name) => handle_name(socket, name))
 		socket.on("disconnect", () => handle_disconnection(socket))
 		socket.on("delete", () => handle_delete(socket))
@@ -37,69 +37,44 @@ export function handle_sockets(server) {
 		send_editor_names(doc_mem)
 	}
 
-	function handle_text(socket, text) {
+	function handle_input(socket, event, value) {
 		const doc_id = socket.data.doc_id
 		const doc_mem = get_doc_in_memory(doc_id)
 		if (!doc_mem) return
 
-		const previous_editor = doc_mem.text_editor
+		const timeout_key = `${event}_timeout`
+		const editor_key = `${event}_editor`
+		const status_event = `${event}_status`
+		const allow_event = `allow_${event}_input`
+
+		const previous_editor = doc_mem[editor_key]
 		if (previous_editor && previous_editor !== socket.id) return
 
-		doc_mem.text_editor = socket.id
+		doc_mem[editor_key] = socket.id
 
 		if (!previous_editor) {
-			socket.to(doc_id).emit("allow_text_input", false)
-			io.to(doc_id).emit(
-				"text_status",
-				`${socket.data.name} is typing...`
-			)
+			socket.to(doc_id).emit(allow_event, false)
+			io.to(doc_id).emit(status_event, `${socket.data.name} is typing...`)
 		}
 
-		socket.to(doc_id).emit("text", text)
+		socket.to(doc_id).emit(event, value)
 
-		if (doc_mem.text_timeout) {
-			clearTimeout(doc_mem.text_timeout)
-			doc_mem.text_timeout = null
+		if (doc_mem[timeout_key]) {
+			clearTimeout(doc_mem[timeout_key])
+			doc_mem[timeout_key] = null
 		}
 
-		doc_mem.text_timeout = setTimeout(async () => {
-			socket.to(doc_id).emit("allow_text_input", true)
-			doc_mem.text_editor = null
-			const update = await update_doc(doc_id, { text })
-			send_text_save_status(update.error, doc_mem)
-		}, 1000)
-	}
-
-	function handle_title(socket, title) {
-		const doc_id = socket.data.doc_id
-		const doc_mem = get_doc_in_memory(doc_id)
-		if (!doc_mem) return
-
-		const previous_editor = doc_mem.title_editor
-		if (previous_editor && previous_editor !== socket.id) return
-
-		doc_mem.title_editor = socket.id
-
-		if (!previous_editor) {
-			socket.to(doc_id).emit("allow_title_input", false)
-			io.to(doc_id).emit(
-				"title_status",
-				`${socket.data.name} is typing...`
-			)
-		}
-
-		socket.to(doc_id).emit("title", title)
-
-		if (doc_mem.title_timeout) {
-			clearTimeout(doc_mem.title_timeout)
-			doc_mem.title_timeout = null
-		}
-
-		doc_mem.title_timeout = setTimeout(async () => {
-			socket.to(doc_id).emit("allow_title_input", true)
-			doc_mem.title_editor = null
-			const update = await update_doc(doc_id, { title })
-			send_title_save_status(update.error, doc_mem)
+		doc_mem[timeout_key] = setTimeout(async () => {
+			socket.to(doc_id).emit(allow_event, true)
+			doc_mem[editor_key] = null
+			doc_mem[timeout_key] = null
+			const update = await update_doc(doc_id, { [event]: value })
+			const save_status = update.error ? "Error saving..." : "Saved!"
+			io.to(doc_id).emit(status_event, save_status)
+			setTimeout(() => {
+				if (doc_mem[editor_key]) return
+				io.to(doc_id).emit(status_event, "")
+			}, 1500)
 		}, 1000)
 	}
 
@@ -124,22 +99,5 @@ export function handle_sockets(server) {
 
 	function send_editor_names(doc_mem) {
 		io.to(doc_mem.id).emit("editor_names", Object.values(doc_mem.editors))
-	}
-
-	function send_text_save_status(error, doc_mem) {
-		const save_status = error ? "Error saving..." : "Saved!"
-		io.to(doc_mem.id).emit("text_status", save_status)
-		setTimeout(() => {
-			if (doc_mem.text_editor) return
-			io.to(doc_mem.id).emit("text_status", "")
-		}, 1500)
-	}
-
-	function send_title_save_status(error, doc_mem) {
-		const save_status = error ? "Error saving..." : "Saved!"
-		io.to(doc_mem.id).emit("title_status", save_status)
-		setTimeout(() => {
-			io.to(doc_mem.id).emit("title_status", "")
-		}, 1500)
 	}
 }

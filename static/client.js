@@ -53,46 +53,35 @@ function sync_name(socket) {
 }
 
 function handle_text_input(socket) {
-	textarea.addEventListener("input", () => {
-		socket.emit("text", textarea.value)
-		display_word_count(textarea.value)
-	})
-
-	socket.on("text", (text) => {
-		textarea.value = text
-		display_word_count(text)
-	})
-
-	socket.on("text_status", (status) => {
-		text_status.innerHTML = status ? status : "&nbsp;"
-	})
-
-	socket.on("allow_text_input", (allowed) => {
-		textarea.disabled = !allowed
+	sync_input(socket, "text", textarea, text_status, (value) => {
+		display_word_count(value)
 	})
 }
 
 function handle_title_input(socket) {
-	title_input.addEventListener("input", () => {
-		socket.emit("title", title_input.value)
-		document.title = title_input.value || "Untitled"
+	sync_input(socket, "title", title_input, title_status, (value) => {
+		document.title = value || "Untitled"
 		add_to_recent_docs()
 	})
+}
 
-	socket.on("title", (title) => {
-		title_input.value = title
-		document.title = title || "Untitled"
-		add_to_recent_docs()
+function sync_input(socket, event, input_element, status_element, callback) {
+	input_element.addEventListener("input", () => {
+		socket.emit(event, input_element.value)
+		if (callback) callback(input_element.value)
 	})
 
-	socket.on("title_status", (status) => {
-		console.log("title status", status)
-		title_status.innerHTML = status ? status : "&nbsp;"
+	socket.on(event, (value) => {
+		input_element.value = value
+		if (callback) callback(value)
 	})
 
-	socket.on("allow_title_input", (allowed) => {
-		console.log("allow title input", allowed)
-		title_input.disabled = !allowed
+	socket.on(`allow_${event}_input`, (allowed) => {
+		input_element.disabled = !allowed
+	})
+
+	socket.on(`${event}_status`, (status) => {
+		status_element.innerHTML = status ? status : "&nbsp;"
 	})
 }
 
