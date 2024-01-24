@@ -3,7 +3,7 @@ const title_input = document.getElementById("title_input")
 const name_input = document.getElementById("name_input")
 const editor_names_display = document.getElementById("editor_names")
 const word_count_display = document.getElementById("word_count")
-const share_button = document.getElementById("share_button")
+const copy_button = document.getElementById("copy_button")
 const delete_button = document.getElementById("delete_button")
 const main_element = document.querySelector("main")
 const text_status = document.getElementById("text_status")
@@ -11,22 +11,16 @@ const title_status = document.getElementById("title_status")
 
 init()
 
-function get_current_id() {
-	return document.body.getAttribute("data-doc-id")
-}
-
 function init() {
 	const io = window.io
 	const socket = io()
-	socket.on("connect", () => {
-		handle_socket(socket)
-	})
-	share_button.addEventListener("click", copy_URL)
+	socket.on("connect", () => handle_socket_actions(socket))
 	display_word_count(textarea.value)
 	add_to_recent_docs(document.title)
+	enable_copy_button()
 }
 
-function handle_socket(socket) {
+function handle_socket_actions(socket) {
 	join(socket)
 	sync_name(socket)
 	handle_text_input(socket)
@@ -35,8 +29,12 @@ function handle_socket(socket) {
 	handle_delete(socket)
 }
 
+function get_doc_id() {
+	return document.body.getAttribute("data-doc-id")
+}
+
 function join(socket) {
-	socket.emit("join", get_current_id())
+	socket.emit("join", get_doc_id())
 }
 
 function sync_name(socket) {
@@ -46,9 +44,8 @@ function sync_name(socket) {
 	socket.emit("name", my_name)
 
 	name_input.addEventListener("input", () => {
-		const name = name_input.value
-		socket.emit("name", name)
-		localStorage.setItem("name", name)
+		socket.emit("name", name_input.value)
+		localStorage.setItem("name", name_input.value)
 	})
 }
 
@@ -93,8 +90,8 @@ function handle_editor_names(socket) {
 
 function handle_delete(socket) {
 	delete_button.addEventListener("click", () => {
-		if (!confirm("Are you sure you want to delete this document?")) return
-		socket.emit("delete")
+		const sure = confirm("Are you sure you want to delete this document?")
+		if (sure) socket.emit("delete")
 	})
 
 	socket.on("deleted", display_deletion)
@@ -108,21 +105,12 @@ function get_word_count(text) {
 	return words.length
 }
 
-function copy_URL() {
-	const url = window.location.href
-	navigator.clipboard.writeText(url)
-	share_button.classList.add("copied")
-	setTimeout(() => {
-		share_button.classList.remove("copied")
-	}, 1000)
-}
-
 function display_word_count(text) {
 	word_count_display.innerText = `${get_word_count(text)} words`
 }
 
 function add_to_recent_docs() {
-	const id = get_current_id()
+	const id = get_doc_id()
 	const title = document.title
 	try {
 		const recents = JSON.parse(localStorage.getItem("recent_docs") ?? "[]")
@@ -135,7 +123,7 @@ function add_to_recent_docs() {
 }
 
 function remove_from_recent_docs() {
-	const id = get_current_id()
+	const id = get_doc_id()
 	try {
 		const recents = JSON.parse(localStorage.getItem("recent_docs") ?? "[]")
 		const others = recents.filter((doc) => doc?.id !== id)
@@ -152,5 +140,18 @@ function display_deletion() {
 		"You will be redirected to the home page ..."
 	setTimeout(() => {
 		window.location.href = "/"
-	}, 4000)
+	}, 3000)
+}
+
+function enable_copy_button() {
+	copy_button.addEventListener("click", copy_URL)
+}
+
+async function copy_URL() {
+	const url = window.location.href
+	await navigator.clipboard.writeText(url)
+	copy_button.classList.add("copied")
+	setTimeout(() => {
+		copy_button.classList.remove("copied")
+	}, 1000)
 }

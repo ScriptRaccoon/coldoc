@@ -200,11 +200,11 @@ main {
 	outline-offset: 2px;
 }
 
-#share_button span {
+.copy_button span {
 	display: none;
 }
 
-#share_button.copied span {
+.copy_button.copied span {
 	display: inline;
 }
 
