@@ -32,7 +32,6 @@ function handle_socket(socket) {
 	handle_text_input(socket)
 	handle_title_input(socket)
 	handle_editor_names(socket)
-	handle_allow_typing(socket)
 	handle_delete(socket)
 }
 
@@ -67,6 +66,10 @@ function handle_text_input(socket) {
 	socket.on("text_status", (status) => {
 		text_status.innerHTML = status ? status : "&nbsp;"
 	})
+
+	socket.on("allow_text_input", (allowed) => {
+		textarea.disabled = !allowed
+	})
 }
 
 function handle_title_input(socket) {
@@ -83,20 +86,19 @@ function handle_title_input(socket) {
 	})
 
 	socket.on("title_status", (status) => {
+		console.log("title status", status)
 		title_status.innerHTML = status ? status : "&nbsp;"
+	})
+
+	socket.on("allow_title_input", (allowed) => {
+		console.log("allow title input", allowed)
+		title_input.disabled = !allowed
 	})
 }
 
 function handle_editor_names(socket) {
 	socket.on("editor_names", (names) => {
 		editor_names_display.innerText = names.join(", ")
-	})
-}
-
-function handle_allow_typing(socket) {
-	socket.on("allow_typing", (allowed) => {
-		textarea.disabled = !allowed
-		if (!textarea.disabled) textarea.focus()
 	})
 }
 

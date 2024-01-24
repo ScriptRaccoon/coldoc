@@ -12,7 +12,7 @@
 	--bg-color: #eee;
 	--inverted-font-color: #fff;
 	--light-color: #ddd;
-	--disabled-textarea-color: #fee;
+	--disabled-text-color: #fee;
 	--dark-color: #666;
 	--width: 42rem;
 	--input-bg-color: #fff;
@@ -96,10 +96,11 @@ a {
 	height: 20rem;
 }
 
+.input[disabled],
 .textarea[disabled] {
 	cursor: not-allowed;
 	color: var(--dark-color);
-	background-color: var(--disabled-textarea-color);
+	background-color: var(--disabled-text-color);
 }
 
 /* INPUT GROUP */

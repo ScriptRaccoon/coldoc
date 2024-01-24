@@ -42,13 +42,13 @@ export function handle_sockets(server) {
 		const doc_mem = get_doc_in_memory(doc_id)
 		if (!doc_mem) return
 
-		const previous_editor = doc_mem.current_editor
+		const previous_editor = doc_mem.text_editor
 		if (previous_editor && previous_editor !== socket.id) return
 
-		doc_mem.current_editor = socket.id
+		doc_mem.text_editor = socket.id
 
 		if (!previous_editor) {
-			socket.to(doc_id).emit("allow_typing", false)
+			socket.to(doc_id).emit("allow_text_input", false)
 			io.to(doc_id).emit(
 				"text_status",
 				`${socket.data.name} is typing...`
@@ -63,8 +63,8 @@ export function handle_sockets(server) {
 		}
 
 		doc_mem.text_timeout = setTimeout(async () => {
-			socket.to(doc_id).emit("allow_typing", true)
-			doc_mem.current_editor = null
+			socket.to(doc_id).emit("allow_text_input", true)
+			doc_mem.text_editor = null
 			const update = await update_doc(doc_id, { text })
 			send_text_save_status(update.error, doc_mem)
 		}, 1000)
@@ -75,6 +75,19 @@ export function handle_sockets(server) {
 		const doc_mem = get_doc_in_memory(doc_id)
 		if (!doc_mem) return
 
+		const previous_editor = doc_mem.title_editor
+		if (previous_editor && previous_editor !== socket.id) return
+
+		doc_mem.title_editor = socket.id
+
+		if (!previous_editor) {
+			socket.to(doc_id).emit("allow_title_input", false)
+			io.to(doc_id).emit(
+				"title_status",
+				`${socket.data.name} is typing...`
+			)
+		}
+
 		socket.to(doc_id).emit("title", title)
 
 		if (doc_mem.title_timeout) {
@@ -83,6 +96,8 @@ export function handle_sockets(server) {
 		}
 
 		doc_mem.title_timeout = setTimeout(async () => {
+			socket.to(doc_id).emit("allow_title_input", true)
+			doc_mem.title_editor = null
 			const update = await update_doc(doc_id, { title })
 			send_title_save_status(update.error, doc_mem)
 		}, 1000)
@@ -115,7 +130,7 @@ export function handle_sockets(server) {
 		const save_status = error ? "Error saving..." : "Saved!"
 		io.to(doc_mem.id).emit("text_status", save_status)
 		setTimeout(() => {
-			if (doc_mem.current_editor) return
+			if (doc_mem.text_editor) return
 			io.to(doc_mem.id).emit("text_status", "")
 		}, 1500)
 	}
