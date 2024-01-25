@@ -202,12 +202,31 @@ footer p {
 	outline-offset: 2px;
 }
 
+/* COPY BUTTON */
+
+.copy_button {
+	position: relative;
+}
+
 .copy_button span {
-	display: none;
+	pointer-events: none;
+	z-index: 10;
+	position: absolute;
+	white-space: nowrap;
+	top: calc(100% + 1.25rem);
+	right: 0;
+	padding: 0.2rem 0.4rem;
+	background-color: var(--primary-color);
+	border-radius: 0.2rem;
+	box-shadow: 0.2rem 0.2rem 0.4rem #0003;
+	opacity: 0;
+	transition: opacity 150ms, transform 150ms;
+	transform: translateY(-0.5rem);
 }
 
 .copy_button.copied span {
-	display: inline;
+	opacity: 1;
+	transform: translateY(0rem);
 }
 
 /* TITLE INPUT */
