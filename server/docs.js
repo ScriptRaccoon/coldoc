@@ -2,7 +2,7 @@ import { doc_model } from "./model.js"
 
 export async function get_doc(id) {
 	try {
-		const doc = await doc_model.findById(id)
+		const doc = await doc_model.findOne({ public_id: id })
 		if (!doc) {
 			console.error(`No document found with id: ${id}`)
 			return { error: "No document found with that id", status: 404 }
@@ -28,9 +28,13 @@ export async function create_doc() {
 
 export async function update_doc(id, updates) {
 	try {
-		const doc = await doc_model.findByIdAndUpdate(id, updates, {
-			new: true,
-		})
+		const doc = await doc_model.findOneAndUpdate(
+			{ public_id: id },
+			updates,
+			{
+				new: true,
+			}
+		)
 		if (!doc) {
 			console.error(`No document found with id: ${id}`)
 			return { error: "No document found with that id", status: 404 }
@@ -45,7 +49,7 @@ export async function update_doc(id, updates) {
 
 export async function delete_doc(id) {
 	try {
-		const doc = await doc_model.findByIdAndDelete(id)
+		const doc = await doc_model.findOneAndDelete({ public_id: id })
 		if (!doc) {
 			console.error(`No document found with id: ${id}`)
 			return { error: "No document found with that id", status: 404 }

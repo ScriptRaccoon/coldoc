@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import { nanoid } from "nanoid"
 
 const doc_schema = new mongoose.Schema(
 	{
@@ -9,6 +10,11 @@ const doc_schema = new mongoose.Schema(
 		text: {
 			type: String,
 			default: "",
+		},
+		public_id: {
+			type: String,
+			default: () => nanoid(10),
+			unique: true,
 		},
 	},
 	{

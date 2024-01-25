@@ -12,7 +12,7 @@ router.post("/new", async (_, res) => {
 	if (doc.error) {
 		return res.render("error", { status: doc.status, message: doc.error })
 	}
-	const doc_id = doc._id.toString()
+	const doc_id = doc.public_id
 	res.redirect(`/document/${doc_id}`)
 })
 
