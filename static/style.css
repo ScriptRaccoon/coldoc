@@ -102,6 +102,7 @@ h2 {
 	border-radius: 0.25rem;
 	outline: none;
 	background-color: var(--input-bg-color);
+	transition: color 150ms, border-color 150ms, background-color 150ms;
 }
 
 :is(.input, .textarea):focus-visible {
