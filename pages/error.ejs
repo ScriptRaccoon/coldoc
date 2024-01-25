@@ -6,12 +6,10 @@
 		<title>Coldoc - <%= status %></title>
 		<link rel="stylesheet" href="/style.css" />
 	</head>
-	<body>
-		<div style="padding: 1rem">
-			<h1><%= status %></h1>
-			<p><%= message %></p>
-			<br />
-			<a href="/">Home</a>
-		</div>
+	<body class="error_page">
+		<h1><%= status %></h1>
+		<p><%= message %></p>
+		<br />
+		<a class="link" href="/">Home</a>
 	</body>
 </html>

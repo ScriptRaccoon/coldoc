@@ -18,13 +18,16 @@
 		></script>
 		<link rel="stylesheet" href="/style.css" />
 	</head>
+
 	<body data-doc-id="<%= doc_id %>">
 		<nav class="nav">
 			<div class="nav_content">
 				<h1>Coldoc</h1>
+
 				<button id="delete_button" aria-label="delete document">
 					<i class="fa-regular fa-trash-can icon"></i>
 				</button>
+
 				<button
 					id="copy_button"
 					class="copy_button"
@@ -33,6 +36,7 @@
 					<span aria-hidden="true">Copied URL</span>
 					<i class="fa-regular fa-copy icon"></i>
 				</button>
+
 				<a href="/" class="link" aria-label="home page">
 					<i class="fa-solid fa-house icon"></i>
 				</a>
@@ -49,24 +53,28 @@
 			<aside class="status" id="title_status">&nbsp;</aside>
 
 			<section class="user_block" aria-label="users">
-				<div class="editors">
-					<span class="editors_label">Editors:</span>
+				<div>
+					<span class="label">Editors:</span>
 					<span id="editor_names"></span>
 				</div>
 
 				<div class="input_group">
-					<label for="name_input">Your Name</label>
-					<input type="text" id="name_input" class="input" />
+					<label class="label" for="name_input">Your Name</label>
+					<input
+						class="input name_input"
+						type="text"
+						id="name_input"
+						spellcheck="false"
+					/>
 				</div>
 			</section>
 
+			<!-- prettier-ignore -->
 			<textarea
 				id="textarea"
 				class="textarea"
 				aria-label="content of the document"
-			>
-<%= text %></textarea
-			>
+			><%= text %></textarea>
 
 			<aside class="status status_bar">
 				<div id="text_status">&nbsp;</div>
