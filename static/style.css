@@ -131,12 +131,6 @@ h2 {
 	font-weight: 500;
 }
 
-/* ICONS */
-
-.icon {
-	width: 1.125rem;
-}
-
 /* HOME PAGE */
 
 .header {
@@ -190,7 +184,7 @@ footer p {
 	margin-inline: auto;
 	display: flex;
 	align-items: center;
-	gap: 1rem;
+	gap: 1.5rem;
 }
 
 .nav_content h1 {
@@ -200,6 +194,10 @@ footer p {
 .nav button:focus-visible {
 	outline: 1px solid var(--inverted-font-color);
 	outline-offset: 2px;
+}
+
+.icon {
+	font-size: 1.25rem;
 }
 
 /* COPY BUTTON */
