@@ -68,6 +68,12 @@ a {
 	border-radius: 0.25rem;
 }
 
+.button_small {
+	font-weight: 400;
+	padding: 0.25rem 0.5rem;
+	font-size: 0.75rem;
+}
+
 .button:focus-visible {
 	outline: 2px solid var(--dark-color);
 	outline-offset: 2px;
@@ -165,6 +171,7 @@ main {
 
 .recent_docs ul {
 	margin-left: 1.5rem;
+	margin-bottom: 1rem;
 }
 
 .notice {
