@@ -174,9 +174,18 @@ main {
 	margin-bottom: 1rem;
 }
 
-.notice {
+/* FOOTER */
+
+footer {
+	padding-inline: 0.75rem;
+	text-align: center;
 	margin-top: 2rem;
 	color: var(--dark-color);
+	text-wrap: balance;
+}
+
+footer p {
+	margin-block: 0.5rem;
 }
 
 /* DOCUMENT PAGE */
