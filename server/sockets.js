@@ -68,8 +68,8 @@ export function handle_sockets(server) {
 			socket.to(doc_id).emit(allow_event, true)
 			doc_mem[editor_key] = null
 			doc_mem[timeout_key] = null
-			const update = await update_doc(doc_id, { [event]: value })
-			const save_status = update.error ? "Error saving..." : "Saved!"
+			const { error } = await update_doc(doc_id, { [event]: value })
+			const save_status = error ? "Error saving..." : "Saved!"
 			io.to(doc_id).emit(status_event, save_status)
 			setTimeout(() => {
 				if (doc_mem[editor_key]) return
@@ -92,8 +92,8 @@ export function handle_sockets(server) {
 		const doc_mem = get_doc_in_memory(doc_id)
 		if (!doc_mem) return
 		delete_doc_in_memory(doc_id)
-		const result = await delete_doc(doc_id)
-		if (result.error) return
+		const { error } = await delete_doc(doc_id)
+		if (error) return
 		io.to(doc_id).emit("deleted")
 	}
 

@@ -8,9 +8,9 @@ router.get("/", (_, res) => {
 })
 
 router.post("/new", async (_, res) => {
-	const doc = await create_doc()
-	if (doc.error) {
-		return res.render("error", { status: doc.status, message: doc.error })
+	const { doc, error } = await create_doc()
+	if (error) {
+		return res.render("error", error)
 	}
 	const doc_id = doc.public_id
 	res.redirect(`/document/${doc_id}`)
@@ -18,9 +18,9 @@ router.post("/new", async (_, res) => {
 
 router.get("/document/:id", async (req, res) => {
 	const doc_id = req.params.id
-	const doc = await get_doc(doc_id)
-	if (doc.error) {
-		return res.render("error", { status: doc.status, message: doc.error })
+	const { doc, error } = await get_doc(doc_id)
+	if (error) {
+		return res.render("error", error)
 	}
 	const { title, text } = doc
 	res.render("document", { doc_id, title, text })
