@@ -196,8 +196,13 @@ footer p {
 	outline-offset: 2px;
 }
 
+.nav_el {
+	display: flex;
+	align-items: center;
+}
+
 .icon {
-	font-size: 1.25rem;
+	height: 1.125rem;
 }
 
 /* COPY BUTTON */
