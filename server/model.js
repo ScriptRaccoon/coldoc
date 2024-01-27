@@ -1,6 +1,10 @@
 import mongoose from "mongoose"
 import { nanoid } from "nanoid"
 
+/**
+ * Schema for a document.
+ * @type {mongoose.Schema<any>}
+ */
 const doc_schema = new mongoose.Schema(
 	{
 		title: {
@@ -22,4 +26,8 @@ const doc_schema = new mongoose.Schema(
 	}
 )
 
+/**
+ * Model for a document.
+ * @type {mongoose.Model<any>}
+ */
 export const doc_model = mongoose.model("document", doc_schema)

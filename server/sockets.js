@@ -6,9 +6,20 @@ import {
 	delete_doc_in_memory,
 } from "./docs_memory.js"
 
+/**
+ * @typedef {import("socket.io").Socket} Socket
+ */
+
+/**
+ * Handles socket.io connections and events.
+ * @param {import("http").Server} server
+ */
 export function handle_sockets(server) {
 	const io = new Server(server)
 
+	/**
+	 * Handles a socket.io connection.
+	 */
 	io.on("connection", (socket) => {
 		socket.on("join", (doc_id) => handle_join(socket, doc_id))
 		socket.on("text", (text) => handle_input(socket, "text", text))
@@ -18,6 +29,11 @@ export function handle_sockets(server) {
 		socket.on("delete", () => handle_delete(socket))
 	})
 
+	/**
+	 * Joins a socket to a document's room and adds the socket to the document's editors.
+	 * @param {Socket} socket - The socket that sent the event.
+	 * @param {string} doc_id - The id of the document to join.
+	 */
 	function handle_join(socket, doc_id) {
 		const doc_mem = get_or_create_doc_in_memory(doc_id)
 		socket.join(doc_id)
@@ -26,6 +42,11 @@ export function handle_sockets(server) {
 		doc_mem.editors[socket.id] = socket.data.name
 	}
 
+	/**
+	 * Updates the name of an editor.
+	 * @param {Socket} socket - The socket that sent the event.
+	 * @param {string} name - The new name of the editor.
+	 */
 	function handle_name(socket, name) {
 		socket.data.name = name
 
@@ -37,12 +58,24 @@ export function handle_sockets(server) {
 		send_editor_names(doc_mem)
 	}
 
+	/**
+	 * Updates a document's text or title.
+	 * @param {Socket} socket - The socket that sent the event.
+	 * @param {"text" | "title"} event - The event to handle.
+	 * @param {string} value - The value to update the document with.
+	 */
 	function handle_input(socket, event, value) {
 		const doc_id = socket.data.doc_id
 		const doc_mem = get_doc_in_memory(doc_id)
 		if (!doc_mem) return
 
+		/**
+		 * @type {"text_timeout" | "title_timeout"}
+		 */
 		const timeout_key = `${event}_timeout`
+		/**
+		 * @type {"text_editor" | "title_editor"}
+		 */
 		const editor_key = `${event}_editor`
 		const status_event = `${event}_status`
 		const allow_event = `allow_${event}_input`
@@ -59,8 +92,9 @@ export function handle_sockets(server) {
 
 		socket.to(doc_id).emit(event, value)
 
-		if (doc_mem[timeout_key]) {
-			clearTimeout(doc_mem[timeout_key])
+		const timeout = doc_mem[timeout_key]
+		if (timeout) {
+			clearTimeout(timeout)
 			doc_mem[timeout_key] = null
 		}
 
@@ -78,6 +112,10 @@ export function handle_sockets(server) {
 		}, 1000)
 	}
 
+	/**
+	 * Removes a socket from a document's room and from the document's editors.
+	 * @param {Socket} socket - The socket that sent the event.
+	 */
 	function handle_disconnection(socket) {
 		const doc_id = socket.data.doc_id
 		socket.leave(doc_id)
@@ -87,6 +125,10 @@ export function handle_sockets(server) {
 		send_editor_names(doc_mem)
 	}
 
+	/**
+	 * Deletes a document from the database
+	 * @param {Socket} socket - The socket that sent the event.
+	 */
 	async function handle_delete(socket) {
 		const doc_id = socket.data.doc_id
 		const doc_mem = get_doc_in_memory(doc_id)
@@ -97,6 +139,10 @@ export function handle_sockets(server) {
 		io.to(doc_id).emit("deleted")
 	}
 
+	/**
+	 * Sends the names of the editors in a document to the editors in that document.
+	 * @param {import("./docs_memory.js").Doc_Memory} doc_mem - The selected document
+	 */
 	function send_editor_names(doc_mem) {
 		io.to(doc_mem.id).emit("editor_names", Object.values(doc_mem.editors))
 	}

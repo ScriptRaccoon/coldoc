@@ -1,16 +1,23 @@
-import dotenv from "dotenv"
+import express from "express"
 
-import { handle_sockets } from "./sockets.js"
-import { connect_to_db } from "./mongodb.js"
-import { generate_server } from "./express.js"
-import { purge_old_docs } from "./docs.js"
+import { resolve_path } from "./utils.js"
 
-async function init() {
-	dotenv.config()
-	const server = generate_server()
-	handle_sockets(server)
-	await connect_to_db()
-	await purge_old_docs()
+/**
+ * Generates an express server.
+ * @param {express.Router} router - The router to use for the server.
+ * @returns {import("http").Server} The generated server.
+ */
+export function generate_server(router) {
+	const app = express()
+	const PORT = process.env.PORT || 3000
+
+	app.use(express.static(resolve_path("..", "static")))
+	app.set("view engine", "ejs")
+	app.set("views", resolve_path("..", "pages"))
+
+	app.use(router)
+
+	return app.listen(PORT, () => {
+		console.info(`Server is listening on port ${PORT}`)
+	})
 }
-
-init()

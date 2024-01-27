@@ -5,8 +5,8 @@
 	"main": "server/server.js",
 	"type": "module",
 	"scripts": {
-		"dev": "nodemon server/server.js",
-		"start": "node server/server.js"
+		"dev": "nodemon server/app.js",
+		"start": "node server/app.js"
 	},
 	"keywords": [],
 	"author": "Script Raccoon",
@@ -20,6 +20,7 @@
 		"socket.io": "^4.7.4"
 	},
 	"devDependencies": {
+		"@types/express": "^4.17.21",
 		"nodemon": "^3.0.3"
 	}
 }
