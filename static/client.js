@@ -77,6 +77,9 @@ const word_count_display = /** @type {HTMLElement} */ (
 function init() {
 	// @ts-ignore
 	const io = window.io
+	/**
+	 * @type {Socket}
+	 */
 	const socket = io()
 	socket.on("connect", () => handle_socket_actions(socket))
 	display_word_count(textarea?.value ?? "")
@@ -136,11 +139,7 @@ function sync_name(socket) {
  * @param {Socket} socket - The socket to handle.
  */
 function handle_text_input(socket) {
-	// prettier-ignore
-	sync_input(socket, "text", textarea, text_status,
-	/** @param {string} value */ (value) => {
-		display_word_count(value)
-	})
+	sync_input(socket, "text", textarea, text_status, display_word_count)
 }
 
 /**
@@ -150,8 +149,8 @@ function handle_text_input(socket) {
 function handle_title_input(socket) {
 	// prettier-ignore
 	sync_input(socket, "title", title_input, title_status,
-	/** @param {string} value */ (value) => {
-		document.title = value || "Untitled"
+	 (title) => {
+		document.title = title || "Untitled"
 		add_to_recent_docs()
 	})
 }
