@@ -253,7 +253,6 @@ footer p {
 @media (min-width: 38rem) {
 	.user_block {
 		grid-template-columns: 1fr auto;
-		align-items: start;
 	}
 }
 
