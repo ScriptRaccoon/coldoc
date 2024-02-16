@@ -68,7 +68,7 @@ const word_count_display = /** @type {HTMLElement} */ (
 )
 
 /**
- * @typedef {import("socket.io").Socket} Socket
+ * @typedef {import("socket.io-client").Socket} Socket
  */
 
 /**
